@@ -9,6 +9,13 @@ ksp {
     arg("room.schemaLocation", "$projectDir/schemas".toString())
 }
 
+// Both variants export the same Room schema; concurrent writes can corrupt it.
+tasks.configureEach {
+    if (name == "kspReleaseKotlin") {
+        mustRunAfter tasks.matching { it.name == "kspDebugKotlin" }
+    }
+}
+
 android {
     defaultConfig {
         applicationId "com.secuso.privacyFriendlyCodeScanner"
